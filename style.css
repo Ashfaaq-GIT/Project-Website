@@ -42,3 +42,14 @@ img {
   height: auto;
   border-radius: 8px;
 }
+
+.video {
+  max-width: 600px;
+  margin: 12px auto;
+}
+
+.video iframe {
+  width: 100%;
+  aspect-ratio: 9 / 16; /* perfect for YouTube Shorts */
+  border-radius: 10px;
+}

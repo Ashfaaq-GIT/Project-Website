@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 2</title>
 
+  <!-- Load root CSS -->
   <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -19,11 +20,20 @@
   </nav>
 
   <p>
-    This lab focuses on sampling IMU and temperature data, logging with RTC timestamps,
-    and comparing power consumption with and without SD card logging.
+    This lab focuses on verifying the nRF BLE LED control sketch first, then building the
+    data logger with two operating modes (no SD logging vs SD logging) and measuring power.
   </p>
 
-  <h2>Lab 2 Questions / Tasks</h2>
+  <h2>LED Test Code (nRF BLE LED Control)</h2>
+  <p>
+    This is the initial nRF test sketch used to verify BLE LED control before implementing
+    the two operating modes.
+  </p>
+  <p>
+    <a href="programs/LEDNRF.ino" target="_blank">View LEDNRF.ino</a>
+  </p>
+
+  <h2>Lab 2 Questions / Requirements</h2>
 
   <ul>
     <li>
@@ -81,15 +91,6 @@
       <figcaption>USB power measurement</figcaption>
     </figure>
   </div>
-
-  <h2>Code</h2>
-  <p>Upload your nRF LED test code into <code>code/</code>:</p>
-
-  <ul>
-    <li>
-      <a href="code/nrf_led_test.ino">nrf_led_test.ino</a>
-    </li>
-  </ul>
 
 </body>
 </html>

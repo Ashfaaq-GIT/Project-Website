@@ -4,67 +4,134 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 2</title>
+
+  <!-- Load root CSS -->
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 
-<h1>Lab 2: Data Logger & Power Measurement</h1>
+  <h1>Lab 2: Data Logger & Power Measurement</h1>
 
-<nav>
-  <a href="../index.html">Home</a> |
-  <a href="../lab1/">Lab 1</a> |
-  <a href="../lab2/">Lab 2</a>
-</nav>
+  <nav>
+    <a href="../index.html">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a>
+  </nav>
 
-<p>
-This lab begins with verifying BLE-based LED control on the nRF board,
-followed by data logging and power analysis.
-</p>
+  <p>
+    This lab begins with verifying BLE-based LED control on the nRF board,
+    followed by implementing two operating modes for data logging (Mode 1: no SD writes,
+    Mode 2: SD logging enabled) and comparing power consumption.
+  </p>
 
-<h2>LED Test Code (nRF BLE LED Control)</h2>
-<p>
-Code reference:
-<a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/LEDNRF.ino" target="_blank">
-LEDNRF.ino (GitHub)
-</a>
-</p>
+  <!-- ===================== LED TEST SECTION ===================== -->
+  <h2>Part A: nRF BLE LED Test</h2>
+  <p>
+    Code reference (open on GitHub):
+    <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/LEDNRF.ino" target="_blank">
+      LEDNRF.ino
+    </a>
+  </p>
 
-<h3>Proof (BLE Write → LED Output)</h3>
-<p>
-When I write <b>1</b> in the BLE app, the board shows <b>Green LED</b>.
-When I write <b>0</b>, the board shows <b>Red LED</b>.
-</p>
+  <h3>Proof (BLE Write → LED Output)</h3>
+  <p>
+    When I write <b>1</b> in the BLE app, the board shows <b>Green LED</b>.
+    When I write <b>0</b>, the board shows <b>Red LED</b>.
+  </p>
 
-<div class="gallery">
-  <figure>
-    <img src="images/IMG_4506.jpg" alt="BLE write value 1">
-    <figcaption>BLE App: Write value = 1</figcaption>
-  </figure>
+  <div class="gallery">
+    <figure>
+      <img src="images/IMG_4506.jpg" alt="BLE app write value = 1">
+      <figcaption>BLE App: Write value = 1</figcaption>
+    </figure>
 
-  <figure>
-    <img src="images/IMG_4507.JPG" alt="Green LED ON">
-    <figcaption>Result: Green LED ON (Value = 1)</figcaption>
-  </figure>
+    <figure>
+      <!-- NOTE: filename is .JPG (uppercase) in your repo -->
+      <img src="images/IMG_4507.JPG" alt="Green LED ON after writing 1">
+      <figcaption>Result: Green LED ON (Value = 1)</figcaption>
+    </figure>
 
-  <figure>
-    <img src="images/IMG_4508.jpg" alt="BLE write value 0">
-    <figcaption>BLE App: Write value = 0</figcaption>
-  </figure>
+    <figure>
+      <img src="images/IMG_4508.jpg" alt="BLE app write value = 0">
+      <figcaption>BLE App: Write value = 0</figcaption>
+    </figure>
 
-  <figure>
-    <img src="images/IMG_4509.JPG" alt="Red LED ON">
-    <figcaption>Result: Red LED ON (Value = 0)</figcaption>
-  </figure>
-</div>
+    <figure>
+      <!-- NOTE: filename is .JPG (uppercase) in your repo -->
+      <img src="images/IMG_4509.JPG" alt="Red LED ON after writing 0">
+      <figcaption>Result: Red LED ON (Value = 0)</figcaption>
+    </figure>
+  </div>
 
-<h2>Lab 2 Questions / Requirements</h2>
-<ul>
-  <li><b>Mode 1:</b> IMU + temperature sampling without SD logging</li>
-  <li><b>Mode 2:</b> Same sampling with SD logging enabled</li>
-  <li><b>Power Measurement:</b> Measure current and compute power</li>
-  <li><b>Battery Runtime:</b> Estimate from measured power</li>
-</ul>
+  <!-- ===================== MODES SECTION ===================== -->
+  <h2>Part B: Operating Modes (Mode 1 and Mode 2)</h2>
+  <p>
+    Implementation code for Mode 1 and Mode 2 (open on GitHub):
+    <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/MODE1_AND_MODE2.ino" target="_blank">
+      MODE1_AND_MODE2.ino
+    </a>
+  </p>
+
+  <h2>Lab 2 Questions / Requirements</h2>
+  <ul>
+    <li>
+      <b>Mode 1 (No SD Logging):</b>
+      Sample IMU + temperature at fixed frequency (e.g., 100 Hz),
+      RTC timestamp, OLED shows mode.
+    </li>
+
+    <li>
+      <b>Mode 2 (SD Logging Enabled):</b>
+      Same sampling frequency, RTC timestamp,
+      data written to SD card, OLED shows mode.
+    </li>
+
+    <li>
+      <b>Power Measurement:</b>
+      Measure average current for each mode (60–120 seconds),
+      record Vusb and Iavg, compute Pusb = Vusb × Iavg.
+    </li>
+
+    <li>
+      <b>Battery Runtime Estimate:</b>
+      500 mAh @ 3.7V, efficiency = 0.85<br>
+      Ibatt ≈ Pusb / (3.7 × 0.85)<br>
+      Runtime (hours) ≈ 0.5 / Ibatt
+    </li>
+
+    <li>
+      <b>Logging Overhead:</b>
+      ΔI and ΔP between SD logging and no logging.
+    </li>
+
+    <li>
+      <b>Data Format:</b>
+      hr,min,sec,ax,ay,az,gx,gy,gz,temp
+    </li>
+  </ul>
+
+  <h2>Images (Data Logger)</h2>
+  <p>
+    Upload your data logger images into <code>images/</code> and update filenames below if needed.
+  </p>
+
+  <div class="gallery">
+    <figure>
+      <img src="images/mode1_oled.jpg" alt="Mode 1 OLED display">
+      <figcaption>Mode 1 OLED display</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/mode2_oled.jpg" alt="Mode 2 OLED display">
+      <figcaption>Mode 2 OLED display</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/power_measure.jpg" alt="Power measurement">
+      <figcaption>USB power measurement</figcaption>
+    </figure>
+  </div>
 
 </body>
 </html>

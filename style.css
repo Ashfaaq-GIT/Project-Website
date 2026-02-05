@@ -53,3 +53,25 @@ img {
   aspect-ratio: 9 / 16; /* perfect for YouTube Shorts */
   border-radius: 10px;
 }
+/* Gallery grid for Lab 2 proof images */
+.gallery{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 15px;
+}
+
+.gallery img{
+  width: 100%;
+  max-width: 100%;
+  margin: 0;          /* overrides global img margin inside gallery */
+  border-radius: 8px; /* keep same style */
+}
+
+figure{ margin: 0; }
+figcaption{
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-top: 6px;
+  text-align: center;
+}

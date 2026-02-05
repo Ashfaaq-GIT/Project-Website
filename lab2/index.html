@@ -3,35 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab 2 - Data Logger & Power Measurement</title>
+  <title>Lab 2</title>
 
   <!-- Root CSS -->
   <link rel="stylesheet" href="../style.css" />
-
-  <!-- Small page-only styling for galleries (optional but helps layout) -->
-  <style>
-    .section { margin: 18px 16px; }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-      margin-top: 10px;
-    }
-    figure {
-      margin: 0;
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    }
-    figcaption {
-      text-align: center;
-      margin-top: 8px;
-      font-size: 0.95rem;
-      color: #444;
-    }
-    code { background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 6px; }
-  </style>
 </head>
 
 <body>
@@ -41,161 +16,164 @@
   <nav>
     <a href="../index.html">Home</a> |
     <a href="../lab1/">Lab 1</a> |
-    <a href="./">Lab 2</a>
+    <a href="../lab2/">Lab 2</a>
   </nav>
 
-  <div class="section">
-    <h2>What this lab does</h2>
-    <p>
-      Build a smart environmental/activity data logger:
-      sample IMU + temperature, timestamp using RTC, and compare power in two modes
-      (Mode 1: no SD writes vs Mode 2: SD logging).
-    </p>
+  <p>
+    Build a smart environmental/activity data logger: sample IMU + temperature, timestamp using RTC,
+    and compare power in two modes (no SD vs SD logging).
+  </p>
+
+  <h2>What this lab does</h2>
+  <ul>
+    <li>Samples IMU (accel + gyro) and temperature</li>
+    <li>Reads RTC time for timestamp</li>
+    <li>Compares power consumption for: Mode 1 (no SD writes) vs Mode 2 (SD logging)</li>
+    <li>Stores data to SD in CSV format</li>
+  </ul>
+
+  <!-- ===================== NRF LED TEST (BEFORE MODE 1 & 2) ===================== -->
+  <h2>nRF BLE LED Test (Operating Modes Control)</h2>
+  <p>
+    This BLE LED test verifies that the phone app can send a value to the board.
+    When I write <b>1</b> in the BLE app, the board shows <b>Green LED</b>.
+    When I write <b>0</b>, the board shows <b>Red LED</b>.
+  </p>
+
+  <h3>Code Links (Open on GitHub)</h3>
+  <ul>
+    <li>
+      <a href="programs/LEDNRF.ino" target="_blank">LEDNRF.ino (BLE LED control)</a>
+    </li>
+    <li>
+      <a href="programs/MODE1_AND_MODE2.ino" target="_blank">MODE1_AND_MODE2.ino (Mode 1 + Mode 2 logger)</a>
+    </li>
+  </ul>
+
+  <h3>BLE App Input Proof</h3>
+  <div class="gallery">
+    <figure>
+      <img src="images/1%20INPUT.jpg" alt="BLE app input = 1" />
+      <figcaption>BLE App: Write value = 1</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/0%20INPUT.jpg" alt="BLE app input = 0" />
+      <figcaption>BLE App: Write value = 0</figcaption>
+    </figure>
   </div>
 
-  <!-- ===================== LED TEST (comes BEFORE Mode 1/2) ===================== -->
-  <div class="section">
-    <h2>Operating Modes (Control via BLE)</h2>
+  <h3>Board LED Proof</h3>
+  <div class="gallery">
+    <figure>
+      <img src="images/IMG_4507.JPG" alt="Green LED ON after writing 1" />
+      <figcaption>Green LED ON (Value = 1)</figcaption>
+    </figure>
 
-    <h3>Step 0 — nRF BLE LED Test (Proof)</h3>
-    <p>
-      Using the BLE app, I write a value to the board:
-      <b>1</b> turns <b>Green LED ON</b>, and <b>0</b> turns <b>Red LED ON</b>.
-    </p>
-
-    <p>
-      Code (opens on my GitHub page, not download):
-      <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/LEDNRF.ino" target="_blank" rel="noopener">
-        LEDNRF.ino
-      </a>
-    </p>
-
-    <div class="gallery">
-      <figure>
-        <img src="images/1%20INPUT.jpg" alt="BLE App write value = 1" />
-        <figcaption>BLE App: Write value = 1</figcaption>
-      </figure>
-
-      <figure>
-        <img src="images/IMG_4507.JPG" alt="Green LED ON after writing 1" />
-        <figcaption>Result: Green LED ON (Value = 1)</figcaption>
-      </figure>
-
-      <figure>
-        <img src="images/0%20INPUT.jpg" alt="BLE App write value = 0" />
-        <figcaption>BLE App: Write value = 0</figcaption>
-      </figure>
-
-      <figure>
-        <img src="images/IMG_4509.JPG" alt="Red LED ON after writing 0" />
-        <figcaption>Result: Red LED ON (Value = 0)</figcaption>
-      </figure>
-    </div>
-
-    <div class="gallery">
-      <figure>
-        <img src="images/NRF%20APP%20CONNECT.png" alt="nRF app connected screenshot" />
-        <figcaption>nRF App Connected</figcaption>
-      </figure>
-    </div>
+    <figure>
+      <img src="images/IMG_4509.JPG" alt="Red LED ON after writing 0" />
+      <figcaption>Red LED ON (Value = 0)</figcaption>
+    </figure>
   </div>
 
   <!-- ===================== MODE 1 & MODE 2 ===================== -->
-  <div class="section">
-    <h3>Mode 1 — Sample Only (No SD Writes)</h3>
-    <ul>
-      <li>Sample IMU + temperature at fixed frequency (example: 100 Hz)</li>
-      <li>RTC timestamp is included</li>
-      <li>OLED/serial indicates Mode 1</li>
-      <li>No SD card logging (lower power)</li>
-    </ul>
+  <h2>Lab 2 Questions / Requirements</h2>
 
-    <h3>Mode 2 — Sample + SD Logging</h3>
-    <ul>
-      <li>Same sampling frequency + RTC timestamp</li>
-      <li>Data is written to SD card</li>
-      <li>OLED/serial indicates Mode 2</li>
-    </ul>
+  <h3>Mode 1 — Sample Only (No SD Writes)</h3>
+  <ul>
+    <li>Sample IMU + temperature at fixed frequency (e.g., 100 Hz)</li>
+    <li>RTC timestamp</li>
+    <li>OLED shows current mode</li>
+    <li>No SD card writes</li>
+  </ul>
 
-    <p>
-      Code (opens on my GitHub page):
-      <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/MODE1_AND_MODE2.ino" target="_blank" rel="noopener">
-        MODE1_AND_MODE2.ino
-      </a>
-    </p>
+  <h3>Mode 2 — SD Logging Enabled</h3>
+  <ul>
+    <li>Same sampling frequency</li>
+    <li>RTC timestamp</li>
+    <li>Data written to SD card</li>
+    <li>OLED shows current mode</li>
+  </ul>
 
-    <div class="gallery">
-      <figure>
-        <img src="images/MODE1_PROOF.png" alt="Mode 1 proof" />
-        <figcaption>Mode 1 Proof (No SD logging)</figcaption>
-      </figure>
+  <h3>Power Measurement</h3>
+  <ul>
+    <li>Measure average current for each mode (60–120 seconds)</li>
+    <li>Record Vusb and Iavg</li>
+    <li>Compute Pusb = Vusb × Iavg</li>
+  </ul>
 
-      <figure>
-        <img src="images/MODE2.png" alt="Mode 2 proof" />
-        <figcaption>Mode 2 Proof (SD logging enabled)</figcaption>
-      </figure>
+  <h3>Battery Runtime Estimate</h3>
+  <p>
+    500 mAh @ 3.7V, efficiency = 0.85<br />
+    Ibatt ≈ Pusb / (3.7 × 0.85)<br />
+    Runtime (hours) ≈ 0.5 / Ibatt
+  </p>
 
-      <figure>
-        <img src="images/SDCARD_READINGS.png" alt="SD card readings/log files" />
-        <figcaption>SD Card Output / Log Files</figcaption>
-      </figure>
-    </div>
+  <h3>Logging Overhead</h3>
+  <ul>
+    <li>Compute ΔI and ΔP between SD logging and no logging</li>
+  </ul>
+
+  <h3>Data Format (CSV)</h3>
+  <p><code>hr,min,sec,ax,ay,az,gx,gy,gz,temp</code></p>
+
+  <!-- ===================== MODE PROOF IMAGES ===================== -->
+  <h2>Mode Proof Screenshots</h2>
+  <p>Evidence that Mode 1 / Mode 2 switching works and SD logs are created.</p>
+
+  <div class="gallery">
+    <figure>
+      <img src="images/NRF%20APP%20CONNECT.png" alt="nRF Connect app connected" />
+      <figcaption>nRF Connect: Connected to device</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/MODE1_PROOF.png" alt="Mode 1 proof" />
+      <figcaption>Mode 1 Proof (Sampling only)</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/MODE2.png" alt="Mode 2 proof" />
+      <figcaption>Mode 2 Proof (SD logging active)</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/SDCARD_READINGS.png" alt="SD card readings" />
+      <figcaption>SD Card: Log files created</figcaption>
+    </figure>
   </div>
 
-  <!-- ===================== DATA FORMAT + TASKS ===================== -->
-  <div class="section">
-    <h2>Lab 2 Questions / Requirements</h2>
-    <ul>
-      <li><b>Data Format:</b> <code>hr,min,sec,ax,ay,az,gx,gy,gz,temp</code></li>
-      <li>
-        <b>Power Measurement:</b> Measure average current for each mode (60–120 seconds),
-        record <code>Vusb</code> and <code>Iavg</code>, compute <code>Pusb = Vusb × Iavg</code>
-      </li>
-      <li>
-        <b>Battery Runtime Estimate:</b> 500 mAh @ 3.7V, efficiency = 0.85<br />
-        <code>Ibatt ≈ Pusb / (3.7 × 0.85)</code><br />
-        <code>Runtime (hours) ≈ 0.5 / Ibatt</code>
-      </li>
-      <li><b>Logging Overhead:</b> ΔI and ΔP between Mode 2 and Mode 1</li>
-    </ul>
+  <!-- ===================== USB POWER METER ===================== -->
+  <h2>USB Power Meter Setup</h2>
+  <p>USB digital tester used to measure voltage/current in Mode 1 and Mode 2.</p>
+
+  <div class="gallery">
+    <figure>
+      <img src="images/usb%20digital%20tester.JPG" alt="USB digital tester" />
+      <figcaption>USB Digital Tester</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/connected%20usb%20digital%20tester.jpg" alt="Connected USB digital tester" />
+      <figcaption>Connected USB Power Meter</figcaption>
+    </figure>
   </div>
 
-  <!-- ===================== POWER METER PROOF ===================== -->
-  <div class="section">
-    <h2>USB Power Meter (Setup Proof)</h2>
-    <p>I connected a USB digital tester to measure voltage/current during Mode 1 and Mode 2.</p>
+  <h2>USB Power Measurement (Video Proof)</h2>
 
-    <div class="gallery">
-      <figure>
-        <img src="images/usb%20digital%20tester.JPG" alt="USB digital tester" />
-        <figcaption>USB Digital Tester (YOJOCK)</figcaption>
-      </figure>
+  <h3>Mode 1 – No SD Logging</h3>
+  <p>USB power meter reading while running Mode 1 (sampling only).</p>
+  <video controls muted playsinline width="100%" controlslist="nodownload">
+    <source src="images/mode1_current_voltage.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
 
-      <figure>
-        <img src="images/connected%20usb%20digital%20tester.jpg" alt="Connected USB digital tester" />
-        <figcaption>Connected USB Power Meter</figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <!-- ===================== QUICK LINKS ===================== -->
-  <div class="section">
-    <h2>Quick Links (Code)</h2>
-    <ul>
-      <li>
-        BLE LED Test:
-        <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/LEDNRF.ino" target="_blank" rel="noopener">
-          LEDNRF.ino
-        </a>
-      </li>
-      <li>
-        Mode 1 + Mode 2 Logger:
-        <a href="https://github.com/Ashfaaq-GIT/Project-Website/blob/main/lab2/programs/MODE1_AND_MODE2.ino" target="_blank" rel="noopener">
-          MODE1_AND_MODE2.ino
-        </a>
-      </li>
-    </ul>
-  </div>
+  <h3>Mode 2 – SD Logging Enabled</h3>
+  <p>USB power meter reading while running Mode 2 (sampling + SD logging).</p>
+  <video controls muted playsinline width="100%" controlslist="nodownload">
+    <source src="images/mode2_current_voltage.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
 
 </body>
 </html>

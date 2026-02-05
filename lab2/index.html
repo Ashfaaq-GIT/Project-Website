@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 2 – Data Logger</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <h1>Lab 2: Data Logger & Power Measurement</h1>
+    <p><a href="../index.html">← Back to Home</a></p>
+  </header>
 
+  <main>
+    <section>
+      <h2>What this lab does</h2>
+      <p>
+        Build a smart environmental/activity data logger: sample IMU + temperature,
+        timestamp using RTC, and compare power in two modes (no SD vs SD logging).
+      </p>
+    </section>
+
+    <section>
+      <h2>Lab 2 Questions / Requirements</h2>
+
+      <h3>Mode 1 — Sample Only (No SD Writes)</h3>
+      <ul>
+        <li>Sample IMU + temperature at a fixed sampling frequency (example: 100 Hz).</li>
+        <li>Timestamp each record using the RTC.</li>
+        <li>No SD card writes.</li>
+        <li>OLED shows Mode + frequency.</li>
+      </ul>
+
+      <h3>Mode 2 — Sample + Log (SD Logging Enabled)</h3>
+      <ul>
+        <li>Same IMU + temperature sampling frequency as Mode 1.</li>
+        <li>Timestamp each record using the RTC.</li>
+        <li>Write data to SD card (CSV or TXT).</li>
+        <li>OLED shows Mode + frequency.</li>
+      </ul>
+
+      <h3>Power Measurements</h3>
+      <ul>
+        <li>Measure average current for each mode (run each mode 60–120 seconds).</li>
+        <li>Record: Vusb and Iavg</li>
+        <li>Compute: Pusb = Vusb × Iavg</li>
+      </ul>
+
+      <h3>Battery Runtime Estimate (500 mAh @ 3.7V, η = 0.85)</h3>
+      <ul>
+        <li>Ibatt ≈ Pusb / (3.7 × 0.85)</li>
+        <li>t(hours) ≈ 0.5 / Ibatt</li>
+        <li>Logging overhead: ΔI and ΔP</li>
+      </ul>
+
+      <h3>Required data format</h3>
+      <p>Each record must include timestamp + IMU accel + IMU gyro + temperature.</p>
+      <pre>hr,min,sec,ax,ay,az,gx,gy,gz,temp</pre>
+    </section>
+
+    <section>
+      <h2>Images</h2>
+      <p>Upload images into <code>lab2/images/</code> and rename the file names below to match yours.</p>
+
+      <div class="gallery">
+        <figure>
+          <img src="images/mode1_oled.jpg" alt="Mode 1 OLED display" />
+          <figcaption>Mode 1 OLED display</figcaption>
+        </figure>
+
+        <figure>
+          <img src="images/mode2_oled.jpg" alt="Mode 2 OLED display" />
+          <figcaption>Mode 2 OLED display</figcaption>
+        </figure>
+
+        <figure>
+          <img src="images/power_measure.jpg" alt="USB power measurement" />
+          <figcaption>Power measurement</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Code</h2>
+      <p>Upload your nRF LED test code into <code>lab2/code/</code> and link it here:</p>
+      <ul>
+        <li><a href="code/nrf_led_test.ino">nrf_led_test.ino</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

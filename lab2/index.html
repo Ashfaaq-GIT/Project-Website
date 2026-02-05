@@ -2,315 +2,322 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lab 2 - BLE + Modes + Power Measurement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 2 - Data Logger & Power Measurement</title>
 
-  <!-- Your root CSS -->
-  <link rel="stylesheet" href="../style.css">
+  <!-- Root CSS -->
+  <link rel="stylesheet" href="../style.css" />
 
   <style>
-    .section {
-      padding: 16px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .card {
-      background: white;
-      padding: 16px;
-      border-radius: 10px;
-      margin: 14px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    }
-    .grid2 {
+    /* Small extras just for Lab2 layout */
+    .section { max-width: 1050px; margin: 0 auto; padding: 16px; }
+    .note { background:#fff; border:1px solid #e6e6ee; padding:12px 14px; border-radius:10px; }
+    .code-links a { font-weight: bold; }
+
+    /* Gallery grid (images + videos) */
+    .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
       align-items: start;
+      margin-top: 12px;
     }
-    @media (max-width: 900px) {
-      .grid2 { grid-template-columns: 1fr; }
+    figure {
+      background: #fff;
+      border: 1px solid #e6e6ee;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 0;
     }
-    .small-note {
+    figure img, figure video {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+    figcaption {
+      margin-top: 8px;
       font-size: 0.95rem;
       color: #444;
+      text-align: center;
     }
-    .eq {
-      font-family: "Courier New", monospace;
-      background: #f6f6ff;
-      padding: 10px;
-      border-radius: 8px;
-      overflow-x: auto;
-      line-height: 1.5;
-    }
+
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
+      background: #fff;
+      border: 1px solid #e6e6ee;
+      border-radius: 10px;
+      overflow: hidden;
       margin-top: 10px;
     }
     th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
     }
-    th {
-      background: #0078D7;
-      color: white;
-    }
-    .video-grid video {
+    th { background: #f2f6ff; }
+    tr:last-child td { border-bottom: none; }
+
+    /* CSV iframe preview */
+    .csvbox {
       width: 100%;
+      height: 420px;
+      border: 1px solid #ddd;
       border-radius: 10px;
-      background: #000;
-    }
-    .caption {
-      text-align: center;
-      font-weight: bold;
-      margin-top: 6px;
-    }
-    .subcap {
-      text-align: center;
-      margin-top: 3px;
-      color: #555;
-      font-size: 0.95rem;
+      background: #fff;
+      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
-  <h1>Lab 2 — BLE Control + Mode 1 / Mode 2 + Power Measurement</h1>
+  <h1>Lab 2: Data Logger & Power Measurement</h1>
 
   <nav>
-    <a href="../index.html">Home</a>
-    <a href="../lab1/index.html">Lab 1</a>
-    <a href="../lab2/index.html">Lab 2</a>
+    <a href="../index.html">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a>
   </nav>
 
   <div class="section">
+    <p>
+      This lab focuses on sampling IMU and temperature data, logging with RTC timestamps,
+      and comparing power consumption with and without SD card logging.
+    </p>
 
-    <!-- ================== NRF LED TEST ================== -->
-    <div class="card">
-      <h2>nRF Connect LED Test (BLE Write)</h2>
-      <p>
-        When I write <b>1</b> in the BLE app, the board shows <b>Green LED</b>.
-        When I write <b>0</b>, the board shows <b>Red LED</b>.
-      </p>
+    <h2>Operating Modes (Required)</h2>
+    <ul>
+      <li>
+        <b>Mode 1 (No SD Logging):</b>
+        Sample IMU + temperature at fixed frequency (e.g., 100 Hz),
+        RTC timestamp, OLED shows mode.
+      </li>
+      <li>
+        <b>Mode 2 (SD Logging Enabled):</b>
+        Same sampling frequency, RTC timestamp,
+        data written to SD card, OLED shows mode.
+      </li>
+      <li>
+        <b>Data Format:</b> <code>hr,min,sec,ax,ay,az,gx,gy,gz,temp</code>
+      </li>
+    </ul>
 
-      <div class="grid2">
-        <div>
-          <img src="images/1%20INPUT.jpg" alt="BLE Write value = 1" />
-          <div class="caption">BLE App: Write value = 1</div>
-          <img src="images/IMG_4506.jpg" alt="Board Green LED ON (Value = 1)" />
-          <div class="subcap">Result: Green LED ON (Value = 1)</div>
-        </div>
-
-        <div>
-          <img src="images/0%20INPUT.jpg" alt="BLE Write value = 0" />
-          <div class="caption">BLE App: Write value = 0</div>
-          <img src="images/IMG_4508.jpg" alt="Board Red LED ON (Value = 0)" />
-          <div class="subcap">Result: Red LED ON (Value = 0)</div>
-        </div>
-      </div>
-
-      <p class="small-note">
-        Code file for this test:
-        <a href="programs/LEDNRF.ino" target="_blank">LEDNRF.ino</a>
-      </p>
-    </div>
-
-    <!-- ================== MODE 1 + MODE 2 CODE ================== -->
-    <div class="card">
-      <h2>Operating Modes (Mode 1 & Mode 2)</h2>
-      <p>
-        This program supports two operating modes:
-      </p>
+    <h2>Code (GitHub Links)</h2>
+    <div class="note code-links">
       <ul>
-        <li><b>Mode 1:</b> Sampling only (no SD write)</li>
-        <li><b>Mode 2:</b> Sampling + SD logging (writes to SD)</li>
+        <li>
+          <b>BLE LED Test (Write 1 / 0):</b>
+          <a href="programs/LEDNRF.ino" target="_blank" rel="noopener">LEDNRF.ino</a>
+        </li>
+        <li>
+          <b>Mode 1 + Mode 2 (Sampling + SD Logging):</b>
+          <a href="programs/MODE1_AND_MODE2.ino" target="_blank" rel="noopener">MODE1_AND_MODE2.ino</a>
+        </li>
       </ul>
-
-      <p class="small-note">
-        Code file:
-        <a href="programs/MODE1_AND_MODE2.ino" target="_blank">MODE1_AND_MODE2.ino</a>
-      </p>
-
-      <div class="grid2">
-        <div>
-          <img src="images/MODE1_PROOF.png" alt="Mode 1 proof" />
-          <div class="caption">Mode 1 Proof (Sampling Only)</div>
-        </div>
-        <div>
-          <img src="images/MODE2.png" alt="Mode 2 proof" />
-          <div class="caption">Mode 2 Proof (SD Logging)</div>
-        </div>
-      </div>
-
-      <img src="images/SDCARD_READINGS.png" alt="SD Card log files" />
-      <div class="caption">SD Card Output (LOG Files Created)</div>
-    </div>
-
-    <!-- ================== USB POWER SETUP ================== -->
-    <div class="card">
-      <h2>USB Power Meter Setup</h2>
-
-      <div class="grid2">
-        <div>
-          <img src="images/usb%20digital%20tester.JPG" alt="USB Digital Tester" />
-          <div class="caption">USB Digital Tester</div>
-        </div>
-        <div>
-          <img src="images/connected%20usb%20digital%20tester.jpg" alt="Connected USB Digital Tester" />
-          <div class="caption">Connected USB Power Meter (Measurement Setup)</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================== USB POWER MEASUREMENT (VIDEO) ================== -->
-    <div class="card">
-      <h2>USB Power Measurement (Video Proof)</h2>
-
-      <div class="grid2 video-grid">
-        <div>
-          <h3>Mode 1 — No SD Logging</h3>
-          <p>USB power meter reading while running Mode 1 (sampling only).</p>
-          <video controls muted playsinline preload="metadata">
-            <source src="images/mode1_current_voltage.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-
-        <div>
-          <h3>Mode 2 — SD Logging Enabled</h3>
-          <p>USB power meter reading while running Mode 2 (sampling + SD logging).</p>
-          <video controls muted playsinline preload="metadata">
-            <source src="images/mode2_current_voltage.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
-
-      <p class="small-note">
-        Note: Videos are set to <b>muted</b>. Audio cannot be “removed” using HTML; it must be muted (or edited).
+      <p style="margin:0;">
+        (These links open the code directly on your GitHub page.)
       </p>
     </div>
 
-    <!-- ================== CALCULATIONS + RESULTS ================== -->
-    <div class="card">
-      <h2>Power Measurement Results & Calculations</h2>
+    <h2>BLE LED Test (Proof)</h2>
+    <p>
+      When I write <b>1</b> in the BLE app, the board shows <b>Green LED</b>.
+      When I write <b>0</b>, the board shows <b>Red LED</b>.
+    </p>
 
-      <h3>Raw Measurements</h3>
+    <div class="grid">
+      <figure>
+        <img src="images/1%20INPUT.jpg" alt="BLE app write value = 1" />
+        <figcaption>BLE App: Write value = 1</figcaption>
+      </figure>
 
-      <p><b>Mode 1 (Sample only / No SD Logging)</b></p>
-      <ul>
-        <li>Current (A): 0.024, 0.028, 0.032</li>
-        <li>Voltage (V): 5.105, 5.097, 5.080</li>
-      </ul>
+      <figure>
+        <img src="images/IMG_4507.JPG" alt="Green LED ON after writing 1" />
+        <figcaption>Result: Green LED ON (Value = 1)</figcaption>
+      </figure>
 
-      <p><b>Mode 2 (Sample + SD logging)</b></p>
-      <ul>
-        <li>Current (A): 0.044, 0.048, 0.052</li>
-        <li>Voltage (V): 5.105, 5.097, 5.080</li>
-      </ul>
+      <figure>
+        <img src="images/0%20INPUT.jpg" alt="BLE app write value = 0" />
+        <figcaption>BLE App: Write value = 0</figcaption>
+      </figure>
 
-      <h3>Step-by-Step Calculations</h3>
-
-      <p><b>1) Average USB Voltage (both modes)</b></p>
-      <div class="eq">
-        Vusb,avg = (5.105 + 5.097 + 5.080) / 3 = 15.282 / 3 = 5.094 V
-      </div>
-
-      <p><b>2) Average USB Current</b></p>
-      <div class="eq">
-        Mode 1: Iusb,avg(M1) = (0.024 + 0.028 + 0.032) / 3 = 0.084 / 3 = 0.028 A = 28 mA
-        <br><br>
-        Mode 2: Iusb,avg(M2) = (0.044 + 0.048 + 0.052) / 3 = 0.144 / 3 = 0.048 A = 48 mA
-      </div>
-
-      <p><b>3) USB Power</b> (Pusb = Vusb,avg × Iusb,avg)</p>
-      <div class="eq">
-        Mode 1: Pusb(M1) = 5.094 × 0.028 = 0.142632 W ≈ 0.143 W
-        <br><br>
-        Mode 2: Pusb(M2) = 5.094 × 0.048 = 0.244512 W ≈ 0.245 W
-      </div>
-
-      <p><b>4) Battery current estimate</b> (500 mAh @ 3.7 V, η = 0.85)</p>
-      <div class="eq">
-        Ibatt ≈ Pusb / (3.7 × 0.85)
-        <br>
-        3.7 × 0.85 = 3.145
-        <br><br>
-        Mode 1: Ibatt(M1) = 0.142632 / 3.145 = 0.04535 A = 45.35 mA
-        <br>
-        Mode 2: Ibatt(M2) = 0.244512 / 3.145 = 0.07775 A = 77.75 mA
-      </div>
-
-      <p><b>5) Runtime estimate</b> (Battery capacity = 0.5 Ah)</p>
-      <div class="eq">
-        t(hours) ≈ 0.5 / Ibatt(A)
-        <br><br>
-        Mode 1: t(M1) = 0.5 / 0.04535 = 11.02 hours
-        <br>
-        Mode 2: t(M2) = 0.5 / 0.07775 = 6.43 hours
-      </div>
-
-      <h3>SD Logging Overhead (Mode2 − Mode1)</h3>
-      <div class="eq">
-        ΔI = 0.048 − 0.028 = 0.020 A = 20 mA
-        <br>
-        ΔP = 0.244512 − 0.142632 = 0.10188 W ≈ 0.102 W
-        <br>
-        Δt = 6.43 − 11.02 = 4.59 hours
-      </div>
-
-      <h3>Final Results Table</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Mode</th>
-            <th>Vusb,avg (V)</th>
-            <th>Iusb,avg (mA)</th>
-            <th>Pusb (W)</th>
-            <th>Ibatt (mA)</th>
-            <th>Runtime (hours)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Mode 1 (Sample Only)</td>
-            <td>5.094</td>
-            <td>28</td>
-            <td>0.143</td>
-            <td>45.35</td>
-            <td>11.02</td>
-          </tr>
-          <tr>
-            <td>Mode 2 (Sample + SD Log)</td>
-            <td>5.094</td>
-            <td>48</td>
-            <td>0.245</td>
-            <td>77.75</td>
-            <td>6.43</td>
-          </tr>
-          <tr>
-            <td><b>Overhead (Mode2 − Mode1)</b></td>
-            <td>—</td>
-            <td><b>+20</b></td>
-            <td><b>+0.102</b></td>
-            <td><b>+32.40</b></td>
-            <td><b>−4.59</b></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3>Discussion</h3>
-      <p>
-        Mode 2 consumes more current and power because SD card writes add extra hardware activity
-        (SD interface + periodic file flush). SD logging is bursty, which also explains the fluctuations in the readings.
-        Compared to Mode 1, logging increases the average USB current by <b>20 mA</b> and the average USB power by
-        <b>~0.102 W</b>. Using the lab battery model (500 mAh @ 3.7 V, 85% efficiency), the estimated battery current
-        increases from <b>45.35 mA</b> (Mode 1) to <b>77.75 mA</b> (Mode 2), reducing estimated runtime from
-        <b>~11.0 hours</b> to <b>~6.4 hours</b>.
-      </p>
+      <figure>
+        <img src="images/IMG_4509.JPG" alt="Red LED ON after writing 0" />
+        <figcaption>Result: Red LED ON (Value = 0)</figcaption>
+      </figure>
     </div>
 
+    <h2>Mode Switching Proof (Serial Monitor)</h2>
+    <div class="grid">
+      <figure>
+        <img src="images/MODE1_PROOF.png" alt="Mode 1 proof in Serial Monitor" />
+        <figcaption>Mode 1 (Sampling only) — Serial Monitor proof</figcaption>
+      </figure>
+
+      <figure>
+        <img src="images/MODE2.png" alt="Mode 2 proof in Serial Monitor" />
+        <figcaption>Mode 2 (Sampling + SD logging) — Serial Monitor proof</figcaption>
+      </figure>
+    </div>
+
+    <h2>SD Card Logging Proof</h2>
+    <div class="grid">
+      <figure>
+        <img src="images/SDCARD_READINGS.png" alt="SD card log files shown on computer" />
+        <figcaption>SD Card log files created (LOG000, LOG001)</figcaption>
+      </figure>
+    </div>
+
+    <h2>USB Power Measurement Setup</h2>
+    <div class="grid">
+      <figure>
+        <img src="images/usb%20digital%20tester.JPG" alt="USB digital tester device" />
+        <figcaption>USB Power Meter (YOJOCK)</figcaption>
+      </figure>
+
+      <figure>
+        <img src="images/connected%20usb%20digital%20tester.jpg" alt="USB power meter connected to board" />
+        <figcaption>Connected USB Power Meter to measure V and I</figcaption>
+      </figure>
+    </div>
+
+    <h2>USB Power Measurement (Video Proof)</h2>
+    <p>Videos are kept muted by default (<code>muted</code>) and no autoplay audio will play.</p>
+
+    <div class="grid">
+      <figure>
+        <video controls muted playsinline preload="metadata">
+          <source src="images/mode1_current_voltage.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Mode 1 — No SD Logging (Current & Voltage)</figcaption>
+      </figure>
+
+      <figure>
+        <video controls muted playsinline preload="metadata">
+          <source src="images/mode2_current_voltage.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Mode 2 — SD Logging Enabled (Current & Voltage)</figcaption>
+      </figure>
+    </div>
+
+    <h2>Measured Values</h2>
+    <p><b>Mode 1 (Sample Only)</b></p>
+    <ul>
+      <li>Current (A): 0.024, 0.028, 0.032</li>
+      <li>Voltage (V): 5.105, 5.097, 5.080</li>
+    </ul>
+
+    <p><b>Mode 2 (Sample + SD Logging)</b></p>
+    <ul>
+      <li>Current (A): 0.044, 0.048, 0.052</li>
+      <li>Voltage (V): 5.105, 5.097, 5.080</li>
+    </ul>
+
+    <h2>Calculations (Required)</h2>
+
+    <h3>1) Average USB Voltage</h3>
+    <p>
+      V<sub>usb,avg</sub> = (5.105 + 5.097 + 5.080) / 3 = <b>5.094 V</b>
+    </p>
+
+    <h3>2) Average USB Current</h3>
+    <p>
+      Mode 1: I<sub>usb,avg</sub> = (0.024 + 0.028 + 0.032) / 3 = <b>0.028 A (28 mA)</b><br />
+      Mode 2: I<sub>usb,avg</sub> = (0.044 + 0.048 + 0.052) / 3 = <b>0.048 A (48 mA)</b>
+    </p>
+
+    <h3>3) USB Power</h3>
+    <p>
+      P<sub>usb</sub> = V<sub>usb,avg</sub> × I<sub>usb,avg</sub><br />
+      Mode 1: 5.094 × 0.028 = <b>0.143 W</b><br />
+      Mode 2: 5.094 × 0.048 = <b>0.245 W</b>
+    </p>
+
+    <h3>4) Battery Current Estimate</h3>
+    <p>
+      Battery: 500 mAh @ 3.7 V, efficiency η = 0.85<br />
+      I<sub>batt</sub> ≈ P<sub>usb</sub> / (3.7 × 0.85) = P<sub>usb</sub> / <b>3.145</b><br />
+      Mode 1: 0.1426 / 3.145 = <b>0.04535 A (45.35 mA)</b><br />
+      Mode 2: 0.2445 / 3.145 = <b>0.07775 A (77.75 mA)</b>
+    </p>
+
+    <h3>5) Runtime Estimate</h3>
+    <p>
+      Runtime (hours) ≈ 0.5 / I<sub>batt</sub>(A)<br />
+      Mode 1: 0.5 / 0.04535 = <b>11.02 hours</b><br />
+      Mode 2: 0.5 / 0.07775 = <b>6.43 hours</b>
+    </p>
+
+    <h3>6) SD Logging Overhead</h3>
+    <p>
+      ΔI = 0.048 − 0.028 = <b>0.020 A (20 mA)</b><br />
+      ΔP = 0.245 − 0.143 = <b>0.102 W (102 mW)</b>
+    </p>
+
+    <h2>Final Results Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Mode</th>
+          <th>Vusb_avg (V)</th>
+          <th>Iusb_avg (mA)</th>
+          <th>Pusb_avg (W)</th>
+          <th>Ibatt (mA)</th>
+          <th>Runtime (hours)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mode 1 (Sample Only)</td>
+          <td>5.094</td>
+          <td>28</td>
+          <td>0.143</td>
+          <td>45.35</td>
+          <td>11.02</td>
+        </tr>
+        <tr>
+          <td>Mode 2 (Sample + Log)</td>
+          <td>5.094</td>
+          <td>48</td>
+          <td>0.245</td>
+          <td>77.75</td>
+          <td>6.43</td>
+        </tr>
+        <tr>
+          <td><b>Overhead (Mode2 − Mode1)</b></td>
+          <td>—</td>
+          <td><b>+20</b></td>
+          <td><b>+0.102</b></td>
+          <td><b>+32.40</b></td>
+          <td><b>4.59</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Short Discussion</h2>
+    <p>
+      Mode 2 draws higher average current and shows larger fluctuations because SD card write/flush operations
+      happen in bursts. Compared to Mode 1, SD logging increases average USB current by <b>20 mA</b> and average
+      power by <b>~0.102 W</b>, increasing estimated battery current from <b>45.35 mA</b> to <b>77.75 mA</b>.
+      As a result, estimated runtime drops from <b>~11.0 h</b> to <b>~6.4 h</b>.
+    </p>
+
+    <h2>SD Card Log File (CSV)</h2>
+    <p>
+      Download/Open the SD log file:
+      <a href="images/LOG000.CSV" target="_blank" rel="noopener"><b>LOG000.CSV</b></a>
+    </p>
+
+    <iframe class="csvbox" src="images/LOG000.CSV" title="LOG000 CSV Preview"></iframe>
+
+    <p class="note">
+      If the CSV preview looks blank on some browsers, use the <b>LOG000.CSV</b> link above to open/download it.
+      (GitHub Pages can be case-sensitive — make sure the filename is exactly <b>LOG000.CSV</b>.)
+    </p>
   </div>
 </body>
 </html>

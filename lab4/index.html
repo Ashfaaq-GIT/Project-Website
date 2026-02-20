@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab 4 (Phase I) – Gesture Recognition</title>
 
-  <!-- Use the root stylesheet -->
+  <!-- Root CSS -->
   <link rel="stylesheet" href="../style.css" />
 
   <style>
@@ -18,43 +18,44 @@
       padding: 14px;
       margin: 14px 0;
     }
-    pre {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 12px;
-      border-radius: 10px;
-      overflow-x: auto;
-      line-height: 1.4;
-    }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .muted { color: #555; }
-    .grid2 {
-      display: grid;
+    .grid2{
+      display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      align-items: start;
+      gap:14px;
+      align-items:start;
     }
-    @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
-    figure {
-      margin: 0;
-      background: #fff;
-      border: 1px solid #e6e6ee;
-      border-radius: 12px;
-      padding: 10px;
+    @media (max-width: 900px){ .grid2{ grid-template-columns: 1fr; } }
+    figure{
+      margin:0;
+      background:#fff;
+      border:1px solid #e6e6ee;
+      border-radius:12px;
+      padding:10px;
     }
-    figcaption {
-      text-align: center;
-      font-size: 0.95rem;
-      color: #444;
-      margin-top: 8px;
+    figcaption{
+      text-align:center;
+      font-size:0.95rem;
+      color:#444;
+      margin-top:8px;
     }
-    figure img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 10px;
+    figure img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:10px;
     }
-    ul { margin-top: 8px; }
+    pre{
+      background:#0f172a;
+      color:#e2e8f0;
+      padding:12px;
+      border-radius:10px;
+      overflow-x:auto;
+      line-height:1.4;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+    .muted{ color:#555; }
   </style>
 </head>
 
@@ -76,221 +77,94 @@
     <div class="card">
       <h2>Overview</h2>
       <p>
-        In Phase I, I collect IMU accelerometer data from the Seeed XIAO nRF52 over BLE, label two gestures
-        (<b>punch</b> and <b>flex</b>), train a TensorFlow model (Arduino Colab notebook), convert to TFLite,
-        and deploy it to the microcontroller for real-time classification.
+        In Phase I, I collected IMU accelerometer data from the Seeed XIAO nRF52 over BLE, labeled two gestures
+        (<b>punch</b> and <b>flex</b>), trained a TensorFlow model in Colab, converted it to TFLite, and deployed
+        it to the microcontroller for real-time classification.
       </p>
     </div>
 
     <div class="card">
-      <h2>Hardware & Software Required</h2>
-
-      <h3>Hardware</h3>
+      <h2>Files Uploaded (Phase I)</h2>
       <ul>
-        <li>Seeed XIAO nRF52 board</li>
-        <li>USB-C cable</li>
-        <li>LiPo battery</li>
-        <li>PC / laptop</li>
-      </ul>
-
-      <h3>Software / Libraries</h3>
-      <ul>
-        <li>Arduino IDE</li>
-        <li><b>Seeed_Arduino_LSM6DS3</b> library (accelerometer/IMU)</li>
-        <li><b>Arduino TensorFlow Lite</b> library</li>
-        <li>Python (latest)</li>
-        <li>Python library: <code>bleak</code> (BLE receiver)</li>
+        <li><b>Training data:</b> <code>flex.csv</code>, <code>punch.csv</code></li>
+        <li><b>Graphs:</b> <code>flex.png</code>, <code>punch.png</code>, <code>training and validation loss.png</code>, <code>training and validation mae.png</code></li>
+        <li><b>Model:</b> <code>model.h</code></li>
+        <li><b>Proof:</b> <code>1_Serial Monitor BLE Address&amp;Advertising.png</code>, <code>collecting punch&amp;flex.png</code>, <code>serial_predictions.png</code></li>
       </ul>
     </div>
 
     <div class="card">
       <h2>Step 1: Find BLE MAC Address (Arduino)</h2>
-      <p>Upload this sketch and read the Serial Monitor to get the BLE address.</p>
+      <p>Upload the BLE sketch and use Serial Monitor to read the device address.</p>
 
-      <pre><code>#include &lt;Arduino.h&gt;
-#include &lt;ArduinoBLE.h&gt;
+      <figure>
+        <img src="1_Serial%20Monitor%20BLE%20Address%26Advertising.png" alt="Serial Monitor BLE Address and Advertising">
+        <figcaption>Serial Monitor BLE Address + Advertising Proof</figcaption>
+      </figure>
+    </div>
 
-void setup() {
-  Serial.begin(115200);
-  delay(2000); // give USB time
-  Serial.println("BOOT");
+    <div class="card">
+      <h2>Step 2: Data Collection (Punch &amp; Flex)</h2>
+      <p>
+        I collected accelerometer data for two gestures (punch and flex) using BLE streaming and saved them as
+        <code>punch.csv</code> and <code>flex.csv</code>.
+      </p>
 
-  if (!BLE.begin()) {
-    Serial.println("starting BLE failed!");
-    while (1) { delay(10); }
-  }
+      <figure>
+        <img src="collecting%20punch%26flex.png" alt="Collecting punch and flex">
+        <figcaption>Data collection proof for punch &amp; flex</figcaption>
+      </figure>
 
-  Serial.print("BLE Address: ");
-  Serial.println(BLE.address());
-
-  BLE.setLocalName("Data Collection");
-  BLE.advertise();
-  Serial.println("Advertising...");
-}
-
-void loop() {
-  // nothing
-}</code></pre>
+      <h3 style="margin-top:16px;">IMU Signal Plots</h3>
 
       <div class="grid2">
         <figure>
-          <img src="images/mac_serial_monitor.png" alt="Serial Monitor showing BLE address (placeholder)">
-          <figcaption>Screenshot: Serial Monitor BLE Address (add your image)</figcaption>
+          <img src="flex.png" alt="Flex accelerometer plot">
+          <figcaption>Flex – Accelerometer (x, y, z) from flex.csv</figcaption>
         </figure>
+
         <figure>
-          <img src="images/ble_advertising.png" alt="BLE advertising proof (placeholder)">
-          <figcaption>Screenshot: Advertising / BLE scan (optional)</figcaption>
+          <img src="punch.png" alt="Punch accelerometer plot">
+          <figcaption>Punch – Accelerometer (x, y, z) from punch.csv</figcaption>
         </figure>
       </div>
     </div>
 
     <div class="card">
-      <h2>Step 2: Stream IMU Data over BLE (Arduino)</h2>
+      <h2>Step 3: Model Training (Colab)</h2>
       <p>
-        Upload the IMU streaming code, then verify the device is advertising and sending accelerometer data.
+        I trained a TensorFlow model using the collected datasets and tracked training performance using
+        loss and MAE graphs.
       </p>
-
-      <figure>
-        <img src="images/arduino_imu_stream_code.png" alt="Arduino IMU stream code screenshot (placeholder)">
-        <figcaption>Screenshot: Arduino IMU streaming sketch (add your image)</figcaption>
-      </figure>
-    </div>
-
-    <div class="card">
-      <h2>Step 3: Capture Training Data (Python + BLE)</h2>
-      <p>
-        Use the Python BLE receiver script to log accelerometer values into a CSV file on your PC.
-        Collect training data for <b>punch</b> and <b>flex</b>, repeating each gesture at least <b>10 times</b>.
-      </p>
-
-      <h3>Python BLE Receiver (set BLE ADDRESS)</h3>
-      <pre><code>import asyncio
-from datetime import datetime
-from bleak import BleakClient
-
-ADDRESS = "xx:xx:xx:xx:xx:xx"  # &lt;-- Replace with your BLE Address
-CHAR_UUID = "12345678-1234-5678-1234-56789abcdef1"
-CSV_PATH = "accel_log.csv"
-
-def int16_le(b0, b1):
-    return int.from_bytes(bytes([b0, b1]), byteorder="little", signed=True)
-
-def handle_notify(sender, data: bytearray):
-    if len(data) != 8:
-        return
-    ctr = int16_le(data[0], data[1])
-    ax_mg = int16_le(data[2], data[3])
-    ay_mg = int16_le(data[4], data[5])
-    az_mg = int16_le(data[6], data[7])
-
-    ax_g = ax_mg / 1000.0
-    ay_g = ay_mg / 1000.0
-    az_g = az_mg / 1000.0
-
-    ts = datetime.now().isoformat(timespec="milliseconds")
-    line = f"{ts},{ctr},{ax_g:.3f},{ay_g:.3f},{az_g:.3f}"
-    print(line)
-    with open(CSV_PATH, "a", encoding="utf-8") as f:
-        f.write(line + "\n")
-
-async def main():
-    print("Connecting to", ADDRESS)
-    async with BleakClient(ADDRESS) as client:
-        print("Connected:", client.is_connected)
-
-        try:
-            with open(CSV_PATH, "r", encoding="utf-8"):
-                pass
-        except FileNotFoundError:
-            with open(CSV_PATH, "w", encoding="utf-8") as f:
-                f.write("timestamp,ctr,ax_g,ay_g,az_g\n")
-
-        await client.start_notify(CHAR_UUID, handle_notify)
-        print("Streaming ACCEL... Ctrl+C to stop.")
-        while True:
-            await asyncio.sleep(1)
-
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("\nStopped.")</code></pre>
-
-      <h3>Data Collection</h3>
-      <ul>
-        <li>Collect and save as <b>punch.csv</b> (repeat punch gesture ≥ 10 times).</li>
-        <li>Collect and save as <b>flex.csv</b> (repeat flex gesture ≥ 10 times).</li>
-      </ul>
 
       <div class="grid2">
         <figure>
-          <img src="images/punch_collection.png" alt="Punch data collection proof (placeholder)">
-          <figcaption>Proof: punch.csv data collection (add screenshot)</figcaption>
+          <img src="training%20and%20validation%20loss.png" alt="Training and validation loss">
+          <figcaption>Training vs Validation Loss</figcaption>
         </figure>
+
         <figure>
-          <img src="images/flex_collection.png" alt="Flex data collection proof (placeholder)">
-          <figcaption>Proof: flex.csv data collection (add screenshot)</figcaption>
+          <img src="training%20and%20validation%20mae.png" alt="Training and validation MAE">
+          <figcaption>Training vs Validation MAE</figcaption>
         </figure>
       </div>
     </div>
 
     <div class="card">
-      <h2>Step 4: Verify CSV Format</h2>
+      <h2>Step 4: Deploy Model to Arduino (model.h)</h2>
       <p>
-        Open <code>punch.csv</code> and <code>flex.csv</code> and verify accelerometer columns are present and consistent.
+        The trained model was converted to a TensorFlow Lite header file (<code>model.h</code>) and added to the
+        Arduino IMU classifier project for on-device inference.
+      </p>
+
+      <p class="muted">
+        (File included in this folder: <code>model.h</code>)
       </p>
 
       <figure>
-        <img src="images/csv_check.png" alt="CSV check screenshot (placeholder)">
-        <figcaption>Screenshot: CSV file opened showing columns (add your image)</figcaption>
+        <img src="serial_predictions.png" alt="Serial monitor predictions">
+        <figcaption>Real-time gesture predictions (Serial Monitor output)</figcaption>
       </figure>
-    </div>
-
-    <div class="card">
-      <h2>Step 5: Train Model in Google Colab (Arduino TensorFlow)</h2>
-      <p>
-        Train your model in the Arduino Colab notebook, convert it to TFLite, and export <code>model.h</code>.
-        Add screenshots of the training graphs and results.
-      </p>
-
-      <div class="grid2">
-        <figure>
-          <img src="images/colab_training_graph1.png" alt="Training graph screenshot (placeholder)">
-          <figcaption>Screenshot: Training graph (add your image)</figcaption>
-        </figure>
-        <figure>
-          <img src="images/colab_training_graph2.png" alt="Training metrics screenshot (placeholder)">
-          <figcaption>Screenshot: Accuracy/Loss (add your image)</figcaption>
-        </figure>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Step 6: Deploy Model to XIAO (IMU_Classifier)</h2>
-      <p>
-        Open the IMU_Classifier example in Arduino IDE, replace <code>model.h</code> with your exported model,
-        upload to the board, and test gestures in Serial Monitor (confidence values should be between 0 and 1).
-      </p>
-
-      <figure>
-        <img src="images/model_h_replace.png" alt="Replace model.h screenshot (placeholder)">
-        <figcaption>Screenshot: model.h replaced + IMU_Classifier open (add your image)</figcaption>
-      </figure>
-
-      <figure>
-        <img src="images/serial_predictions.png" alt="Serial predictions screenshot (placeholder)">
-        <figcaption>Screenshot: Serial Monitor showing gesture confidence (add your image)</figcaption>
-      </figure>
-    </div>
-
-    <div class="card">
-      <h2>What to Submit (Phase I)</h2>
-      <ul>
-        <li>Collected CSV data (punch.csv, flex.csv)</li>
-        <li>Trained model file: <code>model.h</code></li>
-        <li>Screenshots of training graphs</li>
-        <li>Relevant Arduino code screenshots / files</li>
-      </ul>
     </div>
 
   </div>

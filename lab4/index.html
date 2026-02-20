@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="../style.css" />
 
   <style>
-    /* Page-only helpers (does NOT change your global style.css) */
     .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 24px; }
     .card {
       background: #fff;
@@ -44,18 +43,11 @@
       display:block;
       border-radius:10px;
     }
-    pre{
-      background:#0f172a;
-      color:#e2e8f0;
-      padding:12px;
-      border-radius:10px;
-      overflow-x:auto;
-      line-height:1.4;
-    }
     code{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
     }
     .muted{ color:#555; }
+    a.filelink { font-weight: bold; }
   </style>
 </head>
 
@@ -63,7 +55,6 @@
 
   <h1>Lab 4 (Phase I): Gesture Recognition with IMU + ML</h1>
 
-  <!-- SAME NAV ON ALL LAB PAGES -->
   <nav>
     <a href="../">Home</a> |
     <a href="../lab1/">Lab 1</a> |
@@ -84,13 +75,17 @@
     </div>
 
     <div class="card">
-      <h2>Files Uploaded (Phase I)</h2>
+      <h2>Files (Phase I)</h2>
       <ul>
-        <li><b>Training data:</b> <code>flex.csv</code>, <code>punch.csv</code></li>
-        <li><b>Graphs:</b> <code>flex.png</code>, <code>punch.png</code>, <code>training and validation loss.png</code>, <code>training and validation mae.png</code></li>
-        <li><b>Model:</b> <code>model.h</code></li>
-        <li><b>Proof:</b> <code>1_Serial Monitor BLE Address&amp;Advertising.png</code>, <code>collecting punch&amp;flex.png</code>, <code>serial_predictions.png</code></li>
+        <li><b>Training data:</b>
+          <a class="filelink" href="Images/flex.csv" target="_blank" rel="noopener">flex.csv</a>,
+          <a class="filelink" href="Images/punch.csv" target="_blank" rel="noopener">punch.csv</a>
+        </li>
+        <li><b>Model:</b> <a class="filelink" href="Images/model.h" target="_blank" rel="noopener">model.h</a></li>
       </ul>
+      <p class="muted">
+        Note: Some browsers may download CSV/model files when opened from GitHub Pages (this is normal).
+      </p>
     </div>
 
     <div class="card">
@@ -98,7 +93,8 @@
       <p>Upload the BLE sketch and use Serial Monitor to read the device address.</p>
 
       <figure>
-        <img src="1_Serial%20Monitor%20BLE%20Address%26Advertising.png" alt="Serial Monitor BLE Address and Advertising">
+        <img src="Images/1_Serial%20Monitor%20BLE%20Address%26Advertising.png"
+             alt="Serial Monitor BLE Address and Advertising">
         <figcaption>Serial Monitor BLE Address + Advertising Proof</figcaption>
       </figure>
     </div>
@@ -111,7 +107,7 @@
       </p>
 
       <figure>
-        <img src="collecting%20punch%26flex.png" alt="Collecting punch and flex">
+        <img src="Images/collecting%20punch%26flex.png" alt="Collecting punch and flex">
         <figcaption>Data collection proof for punch &amp; flex</figcaption>
       </figure>
 
@@ -119,12 +115,12 @@
 
       <div class="grid2">
         <figure>
-          <img src="flex.png" alt="Flex accelerometer plot">
+          <img src="Images/flex.png" alt="Flex accelerometer plot">
           <figcaption>Flex – Accelerometer (x, y, z) from flex.csv</figcaption>
         </figure>
 
         <figure>
-          <img src="punch.png" alt="Punch accelerometer plot">
+          <img src="Images/punch.png" alt="Punch accelerometer plot">
           <figcaption>Punch – Accelerometer (x, y, z) from punch.csv</figcaption>
         </figure>
       </div>
@@ -133,36 +129,32 @@
     <div class="card">
       <h2>Step 3: Model Training (Colab)</h2>
       <p>
-        I trained a TensorFlow model using the collected datasets and tracked training performance using
+        I trained a TensorFlow model using the collected datasets and tracked performance using
         loss and MAE graphs.
       </p>
 
       <div class="grid2">
         <figure>
-          <img src="training%20and%20validation%20loss.png" alt="Training and validation loss">
+          <img src="Images/training%20and%20validation%20loss.png" alt="Training and validation loss">
           <figcaption>Training vs Validation Loss</figcaption>
         </figure>
 
         <figure>
-          <img src="training%20and%20validation%20mae.png" alt="Training and validation MAE">
+          <img src="Images/training%20and%20validation%20mae.png" alt="Training and validation MAE">
           <figcaption>Training vs Validation MAE</figcaption>
         </figure>
       </div>
     </div>
 
     <div class="card">
-      <h2>Step 4: Deploy Model to Arduino (model.h)</h2>
+      <h2>Step 4: Deploy Model to Arduino</h2>
       <p>
         The trained model was converted to a TensorFlow Lite header file (<code>model.h</code>) and added to the
         Arduino IMU classifier project for on-device inference.
       </p>
 
-      <p class="muted">
-        (File included in this folder: <code>model.h</code>)
-      </p>
-
       <figure>
-        <img src="serial_predictions.png" alt="Serial monitor predictions">
+        <img src="Images/serial_predictions.png" alt="Serial monitor predictions">
         <figcaption>Real-time gesture predictions (Serial Monitor output)</figcaption>
       </figure>
     </div>

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../style.css" />
 
   <style>
-    /* Small page-only helpers (does NOT affect your global style.css) */
+    /* Page-only helpers (does NOT change your global style.css) */
     .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 24px; }
     .card {
       background: #fff;
@@ -68,7 +68,7 @@
     <a href="../lab1/">Lab 1</a> |
     <a href="../lab2/">Lab 2</a> |
     <a href="../lab3/">Lab 3</a> |
-    <a href="../lab4/">Lab 4</a>
+    <a href="./">Lab 4</a>
   </nav>
 
   <div class="wrap">
@@ -78,7 +78,7 @@
       <p>
         In Phase I, I collect IMU accelerometer data from the Seeed XIAO nRF52 over BLE, label two gestures
         (<b>punch</b> and <b>flex</b>), train a TensorFlow model (Arduino Colab notebook), convert to TFLite,
-        and deploy it to the microcontroller for real-time classification. :contentReference[oaicite:1]{index=1}
+        and deploy it to the microcontroller for real-time classification.
       </p>
     </div>
 
@@ -101,12 +101,11 @@
         <li>Python (latest)</li>
         <li>Python library: <code>bleak</code> (BLE receiver)</li>
       </ul>
-      <p class="muted">These requirements are specified in the Lab 4 PDF. :contentReference[oaicite:2]{index=2}</p>
     </div>
 
     <div class="card">
       <h2>Step 1: Find BLE MAC Address (Arduino)</h2>
-      <p>Upload this sketch and read the Serial Monitor to get the BLE address. :contentReference[oaicite:3]{index=3}</p>
+      <p>Upload this sketch and read the Serial Monitor to get the BLE address.</p>
 
       <pre><code>#include &lt;Arduino.h&gt;
 #include &lt;ArduinoBLE.h&gt;
@@ -148,13 +147,7 @@ void loop() {
     <div class="card">
       <h2>Step 2: Stream IMU Data over BLE (Arduino)</h2>
       <p>
-        Upload the provided IMU streaming code and ensure the device name matches your configuration:
-        <code>BLE.setLocalName("XIAO_IMU_EVT");</code>. :contentReference[oaicite:4]{index=4}
-      </p>
-
-      <p class="muted">
-        Note: The original lab document uses a BLE service UUID and characteristic UUID, and sends
-        <b>8 bytes</b> per notification: ctr + ax + ay + az (int16, little-endian). :contentReference[oaicite:5]{index=5}
+        Upload the IMU streaming code, then verify the device is advertising and sending accelerometer data.
       </p>
 
       <figure>
@@ -167,10 +160,10 @@ void loop() {
       <h2>Step 3: Capture Training Data (Python + BLE)</h2>
       <p>
         Use the Python BLE receiver script to log accelerometer values into a CSV file on your PC.
-        Then collect training data for <b>punch</b> and <b>flex</b>, repeating each gesture at least <b>10 times</b>. :contentReference[oaicite:6]{index=6}
+        Collect training data for <b>punch</b> and <b>flex</b>, repeating each gesture at least <b>10 times</b>.
       </p>
 
-      <h3>Windows Script (set BLE ADDRESS)</h3>
+      <h3>Python BLE Receiver (set BLE ADDRESS)</h3>
       <pre><code>import asyncio
 from datetime import datetime
 from bleak import BleakClient
@@ -225,10 +218,9 @@ if __name__ == "__main__":
 
       <h3>Data Collection</h3>
       <ul>
-        <li>Set CSV to <b>punch.csv</b> and perform punching gesture (repeat ≥ 10 times).</li>
-        <li>Set CSV to <b>flex.csv</b> and perform flex gesture (repeat ≥ 10 times).</li>
+        <li>Collect and save as <b>punch.csv</b> (repeat punch gesture ≥ 10 times).</li>
+        <li>Collect and save as <b>flex.csv</b> (repeat flex gesture ≥ 10 times).</li>
       </ul>
-      <p class="muted">This exact protocol is listed in the Lab 4 PDF. :contentReference[oaicite:7]{index=7}</p>
 
       <div class="grid2">
         <figure>
@@ -245,8 +237,7 @@ if __name__ == "__main__":
     <div class="card">
       <h2>Step 4: Verify CSV Format</h2>
       <p>
-        Open <code>punch.csv</code> and <code>flex.csv</code> and verify the columns contain accelerometer data (aX, aY, aZ / ax_g, ay_g, az_g),
-        with consistent formatting. :contentReference[oaicite:8]{index=8}
+        Open <code>punch.csv</code> and <code>flex.csv</code> and verify accelerometer columns are present and consistent.
       </p>
 
       <figure>
@@ -258,14 +249,9 @@ if __name__ == "__main__":
     <div class="card">
       <h2>Step 5: Train Model in Google Colab (Arduino TensorFlow)</h2>
       <p>
-        Use the Arduino team’s Colab notebook to train your model, convert it to TFLite,
-        and export <code>model.h</code>. :contentReference[oaicite:9]{index=9}
+        Train your model in the Arduino Colab notebook, convert it to TFLite, and export <code>model.h</code>.
+        Add screenshots of the training graphs and results.
       </p>
-
-      <ul>
-        <li>Upload your collected CSV files in Colab.</li>
-        <li>For Phase I: use only accelerometer (comment out gyroscope parts if required by the notebook). :contentReference[oaicite:10]{index=10}</li>
-      </ul>
 
       <div class="grid2">
         <figure>
@@ -282,9 +268,8 @@ if __name__ == "__main__":
     <div class="card">
       <h2>Step 6: Deploy Model to XIAO (IMU_Classifier)</h2>
       <p>
-        In Arduino IDE: open <b>IMU_Classifier</b> (Examples → Seeed Arduino LSM6D3),
-        replace <code>model.h</code> with your exported model, then run and test gestures
-        in Serial Monitor. You should see confidence values between 0 and 1. :contentReference[oaicite:11]{index=11}
+        Open the IMU_Classifier example in Arduino IDE, replace <code>model.h</code> with your exported model,
+        upload to the board, and test gestures in Serial Monitor (confidence values should be between 0 and 1).
       </p>
 
       <figure>
@@ -301,12 +286,11 @@ if __name__ == "__main__":
     <div class="card">
       <h2>What to Submit (Phase I)</h2>
       <ul>
-        <li>Collected CSV data for Phase I (punch.csv, flex.csv)</li>
+        <li>Collected CSV data (punch.csv, flex.csv)</li>
         <li>Trained model file: <code>model.h</code></li>
         <li>Screenshots of training graphs</li>
         <li>Relevant Arduino code screenshots / files</li>
       </ul>
-      <p class="muted">Submission items are listed in the Lab 4 PDF. :contentReference[oaicite:12]{index=12}</p>
     </div>
 
   </div>

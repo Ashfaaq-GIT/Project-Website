@@ -1,1 +1,136 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 6 - FSM + Vision</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <h1>Lab 6 - FSM + Vision</h1>
+
+  <nav>
+    <a href="../">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a> |
+    <a href="../lab3/">Lab 3</a> |
+    <a href="../lab4/">Lab 4</a> |
+    <a href="../lab5/">Lab 5</a> |
+    <a href="../lab6/">Lab 6</a> |
+    <a href="../project%20milestone1/">Project Milestone 1</a>
+  </nav>
+
+  <section style="padding: 15px;">
+    <h2>Overview</h2>
+    <p>
+      This page documents my work for <strong>Lab 6: Finite State Machine and Object Detection</strong>.
+      In this lab, I first tested the ESP32S3 built-in LED and camera capture system. After that, I created
+      the Edge Impulse project, uploaded and labeled the dataset, generated features, configured the model,
+      trained the FOMO object detection model, and checked the final detection result.
+    </p>
+
+    <p>
+      The vision part of Lab 6 has been completed successfully. The screenshots below show the step-by-step
+      progress in the same order as the lab workflow.
+    </p>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Lab 6 Workflow</h2>
+    <ul>
+      <li>Tested the ESP32S3 built-in LED.</li>
+      <li>Checked the camera capture process.</li>
+      <li>Verified that photos were successfully taken.</li>
+      <li>Created a new Edge Impulse project.</li>
+      <li>Opened the project dashboard in Edge Impulse.</li>
+      <li>Labeled the uploaded car images.</li>
+      <li>Configured the impulse and feature settings.</li>
+      <li>Generated features from the labeled dataset.</li>
+      <li>Configured the training settings.</li>
+      <li>Trained the FOMO model.</li>
+      <li>Reviewed the F1 score.</li>
+      <li>Verified that the car was being detected correctly.</li>
+    </ul>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Screenshots of Lab 6 Progress</h2>
+    <div class="gallery">
+
+      <figure>
+        <img src="./images/CHECKED LED ON AND OFF.png" alt="ESP32 LED test">
+        <figcaption>Step 1: Tested the ESP32S3 built-in LED by turning it on and off.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/CHECK CAPTURE.png" alt="Checking capture setup">
+        <figcaption>Step 2: Verified the camera capture setup before collecting images.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/CHECK PHOTO IS TAKEN.png" alt="Photo capture confirmation">
+        <figcaption>Step 3: Confirmed that the camera successfully captured photos.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/CREATE NEW IMPULSER.png" alt="Create new Edge Impulse project">
+        <figcaption>Step 4: Created a new Edge Impulse project for car detection.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/CREATED PROJECT IN EDGE IMPULSE.png" alt="Created project in Edge Impulse">
+        <figcaption>Step 5: Opened the Edge Impulse project dashboard.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/STARTED LABELING (2).png" alt="Started labeling images">
+        <figcaption>Step 6: Labeled the uploaded images for object detection.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/SETTING UP FEATURES.png" alt="Setting up features">
+        <figcaption>Step 7: Configured the impulse and feature settings.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/GENERATING FEATURES.png" alt="Generating features">
+        <figcaption>Step 8: Generated features from the labeled dataset.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/TRAINING SETTINGS.png" alt="Training settings">
+        <figcaption>Step 9: Set the FOMO model training parameters.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/TRAINING IS GOOS AND GOOD F1 SCORE.png" alt="Training completed successfully">
+        <figcaption>Step 10: Trained the model successfully and obtained good performance.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/F1 SCORE (2).png" alt="F1 score result">
+        <figcaption>Step 11: Reviewed the F1 score for model evaluation.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./images/CAR IS BEING DETECTED.png" alt="Car detected by model">
+        <figcaption>Step 12: Verified that the trained model detects the car correctly.</figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Conclusion</h2>
+    <p>
+      The Lab 6 vision workflow was completed successfully. I tested the hardware first, then prepared the
+      dataset, trained the model in Edge Impulse, and confirmed that the final model can detect the car.
+      This work will be used together with the FSM part of the lab.
+    </p>
+  </section>
+
+</body>
+</html>

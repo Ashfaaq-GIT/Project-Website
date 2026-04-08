@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 7 - Digital Piano</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
 
+  <h1>Lab 7 - 4-Key Digital Piano using Sine Wave Output</h1>
+
+  <nav>
+    <a href="../">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a> |
+    <a href="../lab3/">Lab 3</a> |
+    <a href="../lab4/">Lab 4</a> |
+    <a href="../lab5/">Lab 5</a> |
+    <a href="../lab6/">Lab 6</a> |
+    <a href="../Lab7/">Lab 7</a> |
+    <a href="../project%20milestone1/">Project Milestone 1</a> |
+    <a href="../Project_Milestone2/">Project Milestone 2</a>
+  </nav>
+
+  <p>
+    In this lab, I built a 4-key digital piano using sine wave generation and a simulated
+    4-bit DAC. The design uses 4 GPIO pins for DAC output and 4 buttons as piano keys.
+    Each key plays a different musical note: C, D, E, and G. :contentReference[oaicite:3]{index=3}
+  </p>
+
+  <h2>Objective</h2>
+  <p>
+    The goal of this lab was to generate sine waves corresponding to musical notes and create
+    a small digital piano. The DAC output uses 16 levels from 0 to 15, and the waveform is
+    controlled using a timer. :contentReference[oaicite:4]{index=4}
+  </p>
+
+  <h2>Implementation Summary</h2>
+  <ul>
+    <li>Used 4 GPIO pins to simulate a 4-bit DAC.</li>
+    <li>Used a 16-step sine lookup table for waveform generation.</li>
+    <li>Connected 4 push buttons for the notes C, D, E, and G.</li>
+    <li>Adjusted the timer period for each note frequency.</li>
+    <li>Displayed waveform behavior using an oscilloscope.</li>
+  </ul>
+
+  <h2>Notes and Timer Periods</h2>
+  <ul>
+    <li>Key 0 - C - 523.251 Hz - 120 us</li>
+    <li>Key 1 - D - 587.330 Hz - 106 us</li>
+    <li>Key 2 - E - 659.255 Hz - 95 us</li>
+    <li>Key 3 - G - 783.991 Hz - 80 us</li>
+  </ul>
+
+  <h2>Wiring and Hardware</h2>
+  <p>
+    The circuit was built using the Xiao ESP32-S3, resistors, push buttons, speaker or buzzer,
+    and oscilloscope. The DAC was implemented using a binary-weighted resistor network connected
+    to 4 GPIO pins. :contentReference[oaicite:5]{index=5}
+  </p>
+
+  <h2>Proof Images</h2>
+  <div class="gallery">
+    <figure>
+      <img src="./Images/3%20bit%20DAC.jpeg" alt="3 bit DAC wiring or hardware setup" />
+      <figcaption>DAC hardware setup for Lab 7</figcaption>
+    </figure>
+
+    <figure>
+      <img src="./Images/OSSCILOSCOPE%20SHOWING.jpeg" alt="Oscilloscope waveform output" />
+      <figcaption>Oscilloscope showing waveform output</figcaption>
+    </figure>
+  </div>
+
+  <h2>Code Logic</h2>
+  <p>
+    The DAC output function writes a 4-bit value across the DAC pins. In the main loop,
+    button states are checked continuously. When a key is pressed, the waveform is activated
+    and the timer period is changed to match the required note. If no key is pressed, the
+    waveform is stopped and DAC output is cleared. :contentReference[oaicite:6]{index=6}
+  </p>
+
+  <h2>Conclusion</h2>
+  <p>
+    This lab demonstrated how a microcontroller can generate different audio tones using
+    timer-based sine wave output and a simple DAC built from GPIO pins and resistors.
+    By assigning different frequencies to each key, the system worked like a small digital piano.
+  </p>
+
+</body>
+</html>

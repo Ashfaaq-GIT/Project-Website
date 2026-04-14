@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 8 - PWM Motor Control + ADC Temperature</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
 
+<body>
+
+  <h1>Lab 8 - PWM Motor Control + ADC Temperature</h1>
+
+  <nav>
+    <a href="../">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a> |
+    <a href="../lab3/">Lab 3</a> |
+    <a href="../lab4/">Lab 4</a> |
+    <a href="../lab5/">Lab 5</a> |
+    <a href="../lab6/">Lab 6</a> |
+    <a href="../Lab7/">Lab 7</a> |
+    <a href="../lab8/">Lab 8</a> |
+    <a href="../project%20milestone1/">Project Milestone 1</a> |
+    <a href="../Project_Milestone2/">Project Milestone 2</a>
+  </nav>
+
+  <section style="padding: 15px;">
+    <h2>Overview</h2>
+    <p>
+      This page documents my work for <strong>Lab 8: PWM-Based Motor Speed Control and ADC Temperature Measurement</strong>.
+      In this lab, I used PWM to control the speed of a DC motor and interfaced an analog temperature sensor
+      with the ESP32-S3 using an ADC pin. I also used switches to adjust the PWM duty cycle and observe
+      real-time motor behavior.
+    </p>
+
+    <p>
+      The videos below show the motor demonstration and the oscilloscope waveform observation.
+    </p>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Lab 8 Workflow</h2>
+    <ul>
+      <li>Connected the switches to the ESP32-S3 board.</li>
+      <li>Generated a PWM signal for motor speed control.</li>
+      <li>Connected the DC motor using the required driver circuit.</li>
+      <li>Used button inputs to change the PWM duty cycle.</li>
+      <li>Observed motor speed changes in real time.</li>
+      <li>Interfaced the analog temperature sensor to an ADC pin.</li>
+      <li>Read the analog sensor value and converted it to voltage.</li>
+      <li>Verified the PWM waveform using the oscilloscope.</li>
+    </ul>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Lab 8 Demonstration Videos</h2>
+
+    <div class="video-grid">
+      <div class="video-card">
+        <h3>Motor Running Demonstration</h3>
+        <video controls>
+          <source src="./images/motor.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div class="video-card">
+        <h3>Oscilloscope PWM Waveform</h3>
+        <video controls>
+          <source src="./images/oscilloscope.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 15px;">
+    <h2>Conclusion</h2>
+    <p>
+      This lab was completed successfully by implementing PWM-based motor speed control and ADC-based
+      temperature measurement on the ESP32-S3. The motor response changed with PWM duty cycle updates,
+      and the oscilloscope output confirmed the waveform behavior during testing.
+    </p>
+  </section>
+
+</body>
+</html>

@@ -1,1 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 9 - RTOS + WiFi</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
 
+  <h1>Lab 9 - RTOS + WiFi</h1>
+
+  <nav>
+    <a href="../">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a> |
+    <a href="../lab3/">Lab 3</a> |
+    <a href="../lab4/">Lab 4</a> |
+    <a href="../lab5/">Lab 5</a> |
+    <a href="../lab6/">Lab 6</a> |
+    <a href="../Lab7/">Lab 7</a> |
+    <a href="../lab%208/">Lab 8</a> |
+    <a href="../lab%209/">Lab 9</a> |
+    <a href="../project%20milestone1/">Project Milestone 1</a> |
+    <a href="../Project_Milestone2/">Project Milestone 2</a>
+  </nav>
+
+  <p>
+    This lab introduces FreeRTOS concepts on the ESP32, including task creation,
+    scheduling, synchronization, queues, mutexes, multicore execution, and WiFi-based
+    camera streaming.
+  </p>
+
+  <h2>Part 1 - Introduction to RTOS</h2>
+  <p>
+    In this part, I ran FreeRTOS task examples on the ESP32. The first demo blinked the onboard LED
+    using a separate task with a 500 ms delay. The second demo created two independent LED tasks
+    blinking at 500 ms and 323 ms, showing how multiple tasks can run concurrently and affect the
+    same hardware resource.
+  </p>
+
+  <div class="video-grid">
+    <div class="video-card">
+      <h3>Single Task LED Blink</h3>
+      <video controls>
+        <source src="Images/Part1_LED_SingleTask_Blink 500ms.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="video-card">
+      <h3>Multi Task LED Blink</h3>
+      <video controls>
+        <source src="Images/Part1_LED_Multitask_Blink 500 and 323ms.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <h2>Part 2 - Task Scheduling</h2>
+  <p>
+    This part demonstrated FreeRTOS task scheduling and task interaction. One example showed
+    task priority, suspension, resumption, and deletion. Another example showed one task blinking
+    an LED while another task read delay values from the Serial Monitor and updated the blink rate
+    in real time.
+  </p>
+
+  <img src="Images/Part2.jpg.png" alt="Part 2 Task Scheduling Output">
+  <p style="text-align:center;">Part 2 task scheduling output</p>
+
+  <h2>Part 3 - Memory Management</h2>
+  <p>
+    In this part, I observed how FreeRTOS tasks use dynamic memory. One task read input from the
+    Serial Monitor, allocated heap memory for the message, and another task printed the message
+    and freed the memory. This demonstrated inter-task communication and safe heap usage.
+  </p>
+
+  <img src="Images/Part3_Heap_Message_Output.jpg.png" alt="Part 3 Heap Message Output">
+  <p style="text-align:center;">Part 3 heap and message output</p>
+
+  <h2>Part 4 - Queue</h2>
+  <p>
+    This part demonstrated queue-based communication between tasks. The main loop continuously
+    sent incrementing numbers into a FreeRTOS queue, and a separate task received and printed
+    those values through the Serial Monitor. This showed a safer method of communication than
+    directly sharing variables.
+  </p>
+
+  <div class="video-card" style="max-width:700px; margin: 0 auto 20px;">
+    <video controls>
+      <source src="Images/part4.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <h2>Part 5 - Mutex</h2>
+  <p>
+    This part demonstrated race conditions and mutex protection. First, two tasks incremented the
+    same shared variable without synchronization, which caused inconsistent results. Then a mutex
+    was added so only one task could access the shared variable at a time. Finally, a mutex was
+    used to safely pass a stack-based parameter to a task.
+  </p>
+
+  <div class="video-grid">
+    <div class="video-card">
+      <h3>Race Condition Output</h3>
+      <video controls>
+        <source src="Images/Part5_Race_Condition_Output.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="video-card">
+      <h3>Mutex Protected Output</h3>
+      <video controls>
+        <source src="Images/Part5_Mutex_Protected_Output.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <div class="video-card" style="max-width:700px; margin: 0 auto 20px;">
+    <h3>Mutex Parameter Passing</h3>
+    <video controls>
+      <source src="Images/Part5_Mutex_Parameter_Passing.jpg.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <h2>Part 6 - Multicore</h2>
+  <p>
+    This part demonstrated multicore execution on the ESP32. One program showed two FreeRTOS
+    tasks running across available cores while printing their task name and core ID. Another
+    program pinned two LED blinking tasks to different cores, showing how the ESP32 can manage
+    concurrent work on Core 0 and Core 1.
+  </p>
+
+  <div class="video-grid">
+    <div class="video-card">
+      <h3>Multicore Task Output</h3>
+      <video controls>
+        <source src="Images/Part6_Multicore_Task_Output.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="video-card">
+      <h3>Dual Core LED Output</h3>
+      <video controls>
+        <source src="Images/Part6_DualCore_LED_Output.jpg.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <h2>Part 7 - WiFi</h2>
+  <p>
+    In this final part, the ESP32 camera was configured as a WiFi access point and used to stream
+    live video through a browser. The device also saved captured images to the SD card. This part
+    demonstrated WiFi setup, camera initialization, HTTP streaming, and real-time image handling.
+  </p>
+
+  <img src="Images/Part7_WiFi_Camera_Stream.jpg.jpeg" alt="Part 7 WiFi Camera Stream">
+  <p style="text-align:center;">Part 7 WiFi camera stream output</p>
+
+</body>
+</html>

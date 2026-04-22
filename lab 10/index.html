@@ -1,1 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 10 - Time of Flight Imaging Application with Adabox Car</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
 
+  <h1>Lab 10 - Time of Flight Imaging Application with Adabox Car</h1>
+
+  <nav>
+    <a href="../">Home</a> |
+    <a href="../lab1/">Lab 1</a> |
+    <a href="../lab2/">Lab 2</a> |
+    <a href="../lab3/">Lab 3</a> |
+    <a href="../lab4/">Lab 4</a> |
+    <a href="../lab5/">Lab 5</a> |
+    <a href="../lab6/">Lab 6</a> |
+    <a href="../Lab7/">Lab 7</a> |
+    <a href="../lab%208/">Lab 8</a> |
+    <a href="../lab%209/">Lab 9</a> |
+    <a href="../lab%2010/">Lab 10</a> |
+    <a href="../project%20milestone1/">Project Milestone 1</a> |
+    <a href="../Project_Milestone2/">Project Milestone 2</a>
+  </nav>
+
+  <p>
+    This lab focused on building and programming the Adabox car with a Time of Flight
+    imaging sensor. The car uses the VL53L5CX ToF imager to observe distance values
+    across an 8x8 grid, compute left and right mean distances, and automatically avoid
+    obstacles while still responding to Bluetooth driving commands.
+  </p>
+
+  <h2>Overview</h2>
+  <p>
+    The ToF sensor provides 64 distance readings arranged in an 8x8 grid. For obstacle
+    detection, the grid is divided into left and right halves, and the average distance
+    for each half is computed. A threshold of 300 mm is used. If the left side is blocked,
+    the car turns right. If the right side is blocked, the car turns left. If both sides
+    are blocked, the car stops and waits for the next command. This behavior is described
+    in the lab handout, along with the BLE control workflow and expected Serial Monitor
+    output. :contentReference[oaicite:1]{index=1}
+  </p>
+
+  <h2>Code Execution Screenshot</h2>
+  <p>
+    The following screenshot shows the Arduino IDE with the uploaded code running and
+    the Serial Monitor displaying left and right mean distance values along with motion
+    decisions such as backward, forward, and stop.
+  </p>
+
+  <img src="Images/code ran screenshot.png" alt="Lab 10 code execution screenshot">
+  <p style="text-align:center;">Arduino IDE output showing ToF-based obstacle detection</p>
+
+  <h2>Video Demonstration</h2>
+  <p>
+    The following video demonstrates the Lab 10 car behavior using the Time of Flight
+    imaging application and obstacle detection logic.
+  </p>
+
+  <div class="video-card" style="max-width:700px; margin: 0 auto 20px;">
+    <video controls>
+      <source src="Images/lab10 video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <h2>Description</h2>
+  <p>
+    In this experiment, I assembled the Adabox car, connected the XIAO nRF52840 Sense
+    board, SparkFun Qwiic motor driver, and VL53L5CX SparkFun ToF imager sensor, then
+    uploaded the provided sketch to the board. The program used BLE commands for manual
+    control while adding an obstacle-detection layer during forward motion. The Serial
+    Monitor displayed live left and right mean values in millimeters, allowing me to
+    observe how the car interpreted the environment and responded automatically.
+  </p>
+
+  <p>
+    When an object was detected on the left side, the car turned right and continued
+    moving forward. When an object was detected on the right side, the car turned left.
+    When both sides were blocked, the car stopped completely until another Bluetooth
+    command was received. This confirmed that the ToF imaging sensor and obstacle
+    avoidance logic were working as expected. :contentReference[oaicite:2]{index=2}
+  </p>
+
+</body>
+</html>
